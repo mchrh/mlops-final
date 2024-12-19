@@ -1,0 +1,8 @@
+---
+- name: Configuration du serveur MLOps
+  hosts: mlops_server
+  become: yes
+  roles:
+    - common
+    - docker
+    - mlflow

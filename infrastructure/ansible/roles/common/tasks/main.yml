@@ -1,0 +1,43 @@
+---
+- name: Mise à jour des paquets
+  apt:
+    update_cache: yes
+    upgrade: yes
+    cache_valid_time: 3600
+
+- name: Installation des paquets essentiels
+  apt:
+    name:
+      - python3-pip
+      - python3-venv
+      - git
+      - curl
+      - wget
+      - vim
+      - htop
+      - software-properties-common
+      - apt-transport-https
+      - ca-certificates
+      - gnupg
+    state: present
+
+- name: Configuration du timezone
+  timezone:
+    name: Europe/Stockholm
+
+- name: Création du répertoire .ssh
+  file:
+    path: /home/ubuntu/.ssh
+    state: directory
+    mode: '0700'
+    owner: ubuntu
+    group: ubuntu
+
+- name: Configuration des limites systèmes
+  sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    - { key: 'vm.max_map_count', value: '262144' }
+    - { key: 'fs.file-max', value: '65536' }
