@@ -36,37 +36,3 @@
     url: https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-linux-x86_64
     dest: /usr/local/bin/docker-compose
     mode: '0755'
-
-- name: Création du répertoire docker
-  file:
-    path: /etc/docker
-    state: directory
-    mode: '0755'
-
-- name: Configuration de Docker daemon
-  copy:
-    content: |
-      {
-        "log-driver": "json-file",
-        "log-opts": {
-          "max-size": "100m",
-          "max-file": "3"
-        },
-        "default-ulimits": {
-          "nofile": {
-            "Name": "nofile",
-            "Hard": 64000,
-            "Soft": 64000
-          }
-        }
-      }
-    dest: /etc/docker/daemon.json
-  notify: restart docker
-
-- name: Création du répertoire pour les applications docker
-  file:
-    path: /opt/docker-apps
-    state: directory
-    mode: '0755'
-    owner: ubuntu
-    group: ubuntu
