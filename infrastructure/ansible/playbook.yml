@@ -3,5 +3,8 @@
   hosts: mlops_server
   become: yes
   roles:
+    docker_users:
+    - ubuntu
+  roles:
     - common
     - docker
