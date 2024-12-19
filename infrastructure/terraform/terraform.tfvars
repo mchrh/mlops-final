@@ -1,1 +1,1 @@
-key_name = "votre-key-pair"
+key_name = "mlops-key"
