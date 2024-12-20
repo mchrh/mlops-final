@@ -1,6 +1,0 @@
-pytest
-fastapi
-PIL
-numpy
-pillow
-httpx

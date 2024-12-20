@@ -2,13 +2,12 @@ import mlflow
 import boto3
 from datetime import datetime
 import json
-from tracking import track_inference # fichier dans ../mlflow/tracking.py
+from tracking import track_inference 
 
 class ComprehendService:
     def __init__(self):
         self.comprehend = boto3.client('comprehend', region_name='eu-west-1')
         
-        # Configuration MLflow
         mlflow.set_tracking_uri("http://mlflow:5000")
         mlflow.set_experiment("amazon-comprehend")
         

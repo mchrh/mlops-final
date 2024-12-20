@@ -4,3 +4,6 @@ boto3
 mlflow
 python-multipart
 pydantic
+prometheus_client
+starlette
+json
