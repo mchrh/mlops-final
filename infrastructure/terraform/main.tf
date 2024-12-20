@@ -8,7 +8,7 @@ data "aws_vpc" "existing" {
 
 resource "aws_subnet" "public" {
   vpc_id            = data.aws_vpc.existing.id
-  cidr_block        = "172.31.96.0/24"
+  cidr_block        = "172.31.128.0/24"
   availability_zone = "${var.aws_region}a"
   map_public_ip_on_launch = true
 
@@ -16,6 +16,12 @@ resource "aws_subnet" "public" {
     Name = "mlops-public-subnet"
     Project = "mlops-free-tier"
   }
+}
+
+resource "random_string" "suffix" {
+  length  = 8
+  special = false
+  upper   = false
 }
 
 data "aws_internet_gateway" "existing" {
@@ -45,7 +51,7 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_iam_role" "ec2_role" {
-  name = "main_mlops_ec2_role"  
+  name = "main_mlops_ec2_role_${random_string.suffix.result}"  
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -125,7 +131,7 @@ resource "aws_iam_instance_profile" "mlops_profile" {
 }
 
 resource "aws_security_group" "mlops_sg" {
-  name        = "mlops-security-group"
+  name        = "mlops-security-group-${random_string.suffix.result}"
   description = "Security group for MLOps server"
   vpc_id      = data.aws_vpc.existing.id
 
