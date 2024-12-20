@@ -2,6 +2,11 @@
 
 ## Architecture et Choix Techniques
 
+Groupe composé de : 
+- Othmane Machrouh
+- Ayoub Larouji
+- Sabry Ben Aissa
+
 ### Vue d'ensemble
 Ce projet implémente une chaîne MLOps complète intégrant l'ensemble des pratiques DevOps et les outils spécifiques au Machine Learning, utilisant une approche Infrastructure as Code (IaC).
 
