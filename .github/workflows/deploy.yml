@@ -42,19 +42,27 @@ jobs:
       working-directory: ./infrastructure/terraform
       run: terraform init
 
-    - name: Terraform Apply
+    - name: Terraform Apply and Get IP
       working-directory: ./infrastructure/terraform
       id: terraform
       run: |
         terraform apply -auto-approve
-        echo "::set-output name=instance_ip::$(terraform output -raw server_public_ip)"
+        echo "instance_ip=$(terraform output -raw server_public_ip)" >> $GITHUB_ENV
+
+    - name: Debug IP
+      run: echo "Instance IP is ${{ env.instance_ip }}"
+
+    - name: Decode SSH key
+      run: |
+        echo "${{ secrets.EC2_SSH_KEY }}" | base64 -d > private_key.pem
+        chmod 600 private_key.pem
 
     - name: Deploy to EC2
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ steps.terraform.outputs.instance_ip }}
+        host: ${{ env.instance_ip }}
         username: ubuntu
-        key: ${{ secrets.EC2_SSH_KEY }}
+        key_path: private_key.pem
         script: |
           cd /home/ubuntu
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
