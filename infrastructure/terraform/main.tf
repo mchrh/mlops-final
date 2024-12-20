@@ -1,4 +1,3 @@
-# Configuration du provider AWS
 provider "aws" {
   region = var.aws_region
 }
@@ -239,3 +238,4 @@ output "mlflow_url" {
   value = "http://${aws_instance.mlops_server.public_ip}:5000"
   description = "L'URL de MLflow"
 }
+
