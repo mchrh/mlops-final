@@ -47,10 +47,16 @@ jobs:
       id: terraform
       run: |
         terraform apply -auto-approve
-        echo "instance_ip=$(terraform output -raw server_public_ip)" >> $GITHUB_ENV
+        # Utiliser la nouvelle syntaxe pour les variables d'environnement GitHub
+        echo "instance_ip=$(terraform output -raw server_public_ip)" >> "$GITHUB_ENV"
 
     - name: Debug IP
-      run: echo "Instance IP is ${{ env.instance_ip }}"
+      run: |
+        echo "Using IP: ${{ env.instance_ip }}"
+        if [ -z "${{ env.instance_ip }}" ]; then
+          echo "Error: IP is empty"
+          exit 1
+        fi
 
     - name: Decode SSH key
       run: |
@@ -62,7 +68,7 @@ jobs:
       with:
         host: ${{ env.instance_ip }}
         username: ubuntu
-        key_path: private_key.pem
+        key_path: ./private_key.pem
         script: |
           cd /home/ubuntu
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
