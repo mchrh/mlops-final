@@ -11,8 +11,7 @@ services:
       - AWS_DEFAULT_REGION=eu-west-1
       - MLFLOW_TRACKING_URI=http://mlflow:5000
     depends_on:
-      mlflow:
-        condition: service_healthy
+      - mlflow
     restart: always
 
   mlflow:
@@ -24,12 +23,7 @@ services:
     command: mlflow server --host 0.0.0.0 --port 5000 --default-artifact-root s3://mlops-zi98v3lj/mlflow-artifacts --backend-store-uri sqlite:///mlflow.db
     volumes:
       - mlflow_data:/mlflow
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+    restart: always
 
   prometheus:
     image: prom/prometheus:v2.48.0
