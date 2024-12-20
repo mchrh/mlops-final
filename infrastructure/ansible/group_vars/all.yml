@@ -4,7 +4,7 @@ mlflow_port: 5000
 prometheus_port: 9090
 grafana_port: 3000
 
-mlflow_artifact_store: "s3://mlops-4d3ai81p"  
+mlflow_artifact_store: "s3://mlops-552mrmyv"  
 
 docker_users:
   - ubuntu

@@ -1,3 +1,4 @@
+# Configuration du provider AWS
 provider "aws" {
   region = var.aws_region
 }
@@ -8,7 +9,7 @@ data "aws_vpc" "existing" {
 
 resource "aws_subnet" "public" {
   vpc_id            = data.aws_vpc.existing.id
-  cidr_block        = "172.31.96.0/24"  
+  cidr_block        = "172.31.96.0/24"
   availability_zone = "${var.aws_region}a"
   map_public_ip_on_launch = true
 
@@ -68,8 +69,8 @@ resource "aws_iam_role" "ec2_role" {
   }
 }
 
-resource "aws_iam_role_policy" "s3_access" {
-  name = "main_s3_access"  # Ajout du préfixe main
+resource "aws_iam_role_policy" "comprehend_s3_ecr_access" {
+  name = "main_comprehend_s3_ecr_access"
   role = aws_iam_role.ec2_role.id
 
   policy = jsonencode({
@@ -86,6 +87,33 @@ resource "aws_iam_role_policy" "s3_access" {
           "${aws_s3_bucket.mlops_bucket.arn}",
           "${aws_s3_bucket.mlops_bucket.arn}/*"
         ]
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "comprehend:DetectSentiment",
+          "comprehend:DetectEntities",
+          "comprehend:DetectKeyPhrases"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:GetRepositoryPolicy",
+          "ecr:DescribeRepositories",
+          "ecr:ListImages",
+          "ecr:DescribeImages",
+          "ecr:BatchGetImage",
+          "ecr:InitiateLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:CompleteLayerUpload",
+          "ecr:PutImage"
+        ]
+        Resource = "*"
       }
     ]
   })
@@ -108,6 +136,14 @@ resource "aws_security_group" "mlops_sg" {
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 8000
+    to_port     = 8000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "API access"
   }
 
   # MLflow
@@ -149,7 +185,7 @@ resource "aws_security_group" "mlops_sg" {
 
 resource "aws_instance" "mlops_server" {
   ami           = var.ami_id
-  instance_type = "t3.micro"
+  instance_type = "t2.micro"
   subnet_id     = aws_subnet.public.id
   iam_instance_profile = aws_iam_instance_profile.mlops_profile.name
 

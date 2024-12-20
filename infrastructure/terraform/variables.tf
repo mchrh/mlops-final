@@ -1,19 +1,19 @@
 variable "aws_region" {
   description = "AWS region"
   type        = string
-  default     = "eu-north-1"  
+  default     = "eu-west-1"  
 }
 
 variable "ami_id" {
   description = "AMI ID for EC2 instance (Ubuntu Server)"
   type        = string
-  default     = "ami-0fe8bec493a81c7da"  
+  default     = "ami-0694d931cee176e7d"  
 }
 
 variable "vpc_id" {
   description = "Existing VPC ID"
   type        = string
-  default     = "vpc-05697684a7d22af0a"
+  default     = "vpc-04046db55268c9875"
 }
 
 variable "key_name" {
