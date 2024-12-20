@@ -149,7 +149,7 @@ Expose les métriques Prometheus.
 - `sentiment_confidence` : Scores de confiance des analyses
 - `entities_per_text` : Nombre d'entités détectées par texte
 
-![alt text](<Screenshot 2024-12-20 at 16.01.58.png>)
+![alt text](<Screenshot 2024-12-20 at 18.49.42.png>)
 
 ## Sécurité
 - IAM roles pour l'accès aux services AWS
