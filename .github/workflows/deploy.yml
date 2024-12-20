@@ -2,7 +2,7 @@ name: Deploy MLOps Application
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 env:
   AWS_REGION: eu-west-1
