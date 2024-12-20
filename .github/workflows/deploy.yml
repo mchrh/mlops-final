@@ -9,6 +9,8 @@ env:
   ECR_REPOSITORY: comprehend-api
   IMAGE_TAG: ${{ github.sha }}
 
+#,da
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
